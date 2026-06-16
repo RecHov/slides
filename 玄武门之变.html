@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄武门之变 — 唐朝权力交接的关键一天</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500&family=LXGW+WenKai+TC&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   CSS CUSTOM PROPERTIES (Broadside · Chinese)
+   =========================================== */
+:root {
+    --ink-black: #111111;
+    --ink-black-alt: #1A1A18;
+    --fire-orange: #E85D26;
+    --cream: #F0ECE5;
+    --cream-muted: #888880;
+    --cream-hint: #505048;
+    --border-dark: #282826;
+    --ink-on-orange-muted: rgba(17, 17, 17, 0.75);
+    --ink-on-orange-hint: rgba(17, 17, 17, 0.55);
+    --ink-on-orange-faint: rgba(17, 17, 17, 0.40);
+    --ink-on-orange-border: rgba(17, 17, 17, 0.20);
+
+    --font-display: 'Noto Serif SC', serif;
+    --font-body: 'LXGW WenKai TC', 'Noto Serif SC', serif;
+    --font-chrome: 'Noto Sans SC', 'IBM Plex Mono', sans-serif;
+
+    --pad-x: 106px;
+    --pad-y: 60px;
+    --h2-size: 86px;
+    --h3-size: 54px;
+    --body-size: 23px;
+    --lead-size: 31px;
+    --label-size: 14px;
+    --caption-size: 17px;
+
+    --ease-slide: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur-slide: 0.8s;
+    --dur-enter: 0.5s;
+}
+
+/* ===========================================
+   FIXED 16:9 STAGE — viewport-base.css
+   =========================================== */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #000; }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: #000; }
+.deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; }
+.slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; }
+.slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+/* ===========================================
+   BROADSIDE · CHINESE DESIGN SYSTEM
+   =========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* --- Dark register (content slides) --- */
+.slide.dark { background: var(--ink-black); color: var(--cream); }
+
+/* --- Orange register (cover, chapter, end) --- */
+.slide.orange { background: var(--fire-orange); }
+.slide.orange .text-ink { color: var(--ink-black); }
+.slide.orange .text-muted { color: var(--ink-on-orange-muted); }
+.slide.orange .text-hint { color: var(--ink-on-orange-hint); }
+.slide.orange .border-hair { border-color: var(--ink-on-orange-border); }
+
+/* Chrome bar */
+.chrome { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: var(--pad-y) var(--pad-x) 8px var(--pad-x); border-bottom: 1px solid var(--border-dark); margin-bottom: 16px; }
+.slide.orange .chrome { border-color: var(--ink-on-orange-border); }
+.chrome-label { font-family: var(--font-chrome); font-size: var(--label-size); font-weight: 500; color: var(--fire-orange); letter-spacing: 0.1em; }
+.slide.orange .chrome-label { color: var(--ink-on-orange-hint); }
+.chrome-num { font-family: var(--font-chrome); font-size: var(--label-size); font-weight: 500; color: var(--cream-hint); letter-spacing: 0.1em; }
+.slide.orange .chrome-num { color: var(--ink-on-orange-faint); }
+
+/* Suppress chrome on declarative slides */
+.slide.cover .chrome, .slide.chapter .chrome, .slide.quote .chrome, .slide.end .chrome,
+.slide.cover .chrome-foot, .slide.chapter .chrome-foot, .slide.quote .chrome-foot, .slide.end .chrome-foot {
+    display: none;
+}
+
+/* Chrome foot */
+.chrome-foot { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px var(--pad-x) var(--pad-y) var(--pad-x); border-top: 1px solid var(--border-dark); margin-top: 16px; }
+.slide.orange .chrome-foot { border-color: var(--ink-on-orange-border); }
+
+/* Content container — fills space between chrome bars */
+.slide-content { flex: 1; padding: 0 var(--pad-x); display: flex; flex-direction: column; justify-content: center; height: calc(100% - 80px); }
+.slide.cover .slide-content, .slide.chapter .slide-content, .slide.end .slide-content { height: 100%; padding-top: var(--pad-y); }
+
+/* Typography */
+.display { font-family: var(--font-display); font-size: 250px; font-weight: 900; line-height: 1.1; letter-spacing: 0; color: var(--cream); }
+.slide.orange .display { color: var(--ink-black); }
+
+.h1 { font-family: var(--font-display); font-size: 144px; font-weight: 900; line-height: 1.15; letter-spacing: 0; color: var(--cream); }
+.slide.orange .h1 { color: var(--ink-black); }
+
+.h2 { font-family: var(--font-display); font-size: var(--h2-size); font-weight: 700; line-height: 1.2; letter-spacing: 0; color: var(--cream); margin-bottom: 12px; }
+.slide.orange .h2 { color: var(--ink-black); }
+
+.h3 { font-family: var(--font-display); font-size: var(--h3-size); font-weight: 700; line-height: 1.3; letter-spacing: 0; color: var(--cream); }
+.slide.orange .h3 { color: var(--ink-black); }
+
+.lead { font-family: var(--font-body); font-size: var(--lead-size); font-weight: 400; line-height: 1.7; color: var(--cream); }
+.slide.orange .lead { color: var(--ink-on-orange-muted); }
+
+.body { font-family: var(--font-body); font-size: var(--body-size); font-weight: 400; line-height: 1.8; color: var(--cream-muted); }
+.slide.orange .body { color: var(--ink-on-orange-muted); }
+
+.caption { font-family: var(--font-chrome); font-size: var(--caption-size); font-weight: 400; line-height: 1.6; color: var(--cream-hint); }
+.slide.orange .caption { color: var(--ink-on-orange-faint); }
+
+.kicker { font-family: var(--font-chrome); font-size: var(--label-size); font-weight: 500; color: var(--fire-orange); letter-spacing: 0.1em; margin-bottom: 8px; }
+.slide.orange .kicker { color: var(--ink-black); }
+
+/* Accent rule */
+.rule { width: 36px; height: 2px; background: var(--fire-orange); margin: 16px 0; }
+.slide.orange .rule { background: var(--ink-black); }
+
+/* Orange accent on dark slides */
+.accent { color: var(--fire-orange); }
+
+/* Bullet lists */
+ul { list-style: none; padding: 0; }
+ul li { position: relative; padding-left: 28px; margin-bottom: 10px; font-family: var(--font-body); font-size: var(--body-size); line-height: 1.8; color: var(--cream-muted); }
+.slide.orange ul li { color: var(--ink-on-orange-muted); }
+ul li::before { content: '/'; position: absolute; left: 0; font-family: var(--font-chrome); font-weight: 700; color: var(--fire-orange); }
+.slide.orange ul li::before { color: var(--ink-black); }
+
+/* Flex helpers */
+.flex-row { display: flex; flex-direction: row; }
+.flex-col { display: flex; flex-direction: column; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.gap-lg { gap: 48px; }
+.gap-md { gap: 24px; }
+.gap-sm { gap: 12px; }
+.w-half { width: 50%; }
+
+/* Stat card */
+.stat-card { border-top: 1px solid var(--border-dark); padding: 24px 24px 24px 0; margin-bottom: 16px; }
+.slide.orange .stat-card { border-color: var(--ink-on-orange-border); }
+.stat-value { font-family: var(--font-display); font-size: 106px; font-weight: 900; line-height: 1; color: var(--fire-orange); }
+.slide.orange .stat-value { color: var(--ink-black); }
+.stat-label { font-family: var(--font-body); font-size: var(--body-size); line-height: 1.6; color: var(--cream-muted); margin-top: 4px; }
+.slide.orange .stat-label { color: var(--ink-on-orange-muted); }
+
+/* Catalogue number */
+.cat-num { font-family: var(--font-chrome); font-size: 21px; font-weight: 500; color: var(--cream-hint); letter-spacing: 0.1em; }
+.slide.orange .cat-num { color: var(--ink-on-orange-faint); }
+
+/* Tag */
+.tag { display: inline-block; font-family: var(--font-chrome); font-size: var(--label-size); font-weight: 500; color: var(--fire-orange); border: 1px solid var(--fire-orange); padding: 4px 12px; }
+.slide.orange .tag { color: var(--ink-on-orange-hint); border-color: var(--ink-on-orange-border); }
+
+/* Full-width rule divider */
+.rule-full { width: 100%; height: 1px; background: var(--border-dark); margin: 16px 0; }
+.slide.orange .rule-full { background: var(--ink-on-orange-border); }
+
+/* Two-column split */
+.split-panel { flex: 1; }
+.split-left { padding-right: 48px; border-right: 1px solid var(--border-dark); }
+.slide.orange .split-left { border-color: var(--ink-on-orange-border); }
+.split-right { padding-left: 48px; }
+
+/* Timeline styles */
+.timeline { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.timeline-item { display: flex; flex-direction: row; gap: 16px; align-items: flex-start; }
+.timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fire-orange); margin-top: 6px; flex-shrink: 0; }
+.slide.orange .timeline-dot { background: var(--ink-black); }
+.timeline-text { font-family: var(--font-body); font-size: var(--body-size); line-height: 1.7; color: var(--cream-muted); }
+.slide.orange .timeline-text { color: var(--ink-on-orange-muted); }
+.timeline-time { font-family: var(--font-chrome); font-size: var(--label-size); color: var(--fire-orange); font-weight: 500; margin-bottom: 2px; }
+.slide.orange .timeline-time { color: var(--ink-black); }
+
+/* ===========================================
+   ENTRANCE ANIMATIONS
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity var(--dur-enter) var(--ease-enter), transform var(--dur-enter) var(--ease-enter); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+.reveal:nth-child(6) { transition-delay: 0.6s; }
+
+/* ===========================================
+   INLINE EDITING
+   =========================================== */
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle { position: fixed; top: 8px; left: 88px; z-index: 10001; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; background: #333; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; font-family: sans-serif; }
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+[contenteditable]:focus { outline: 2px dashed var(--fire-orange); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============================================
+     SLIDE 1: 封面 (Orange)
+     ============================================ -->
+<section class="slide orange cover visible" data-slide="1">
+    <div class="slide-content" style="justify-content: center; align-items: flex-start; padding: var(--pad-y) var(--pad-x);">
+        <div class="cat-num reveal" style="margin-bottom: 40px;">TANG · 626</div>
+        <div class="rule reveal" style="margin-bottom: 24px;"></div>
+        <h1 class="h1 reveal" style="font-size: 180px; max-width: 80%;">玄武门之变</h1>
+        <p class="lead reveal" style="margin-top: 24px; max-width: 65%;">唐朝权力交接的关键一天 —— 武德九年六月初四</p>
+        <div style="margin-top: 80px;">
+            <span class="tag reveal">自学资料</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 2: 目录 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="2">
+    <div class="chrome">
+        <span class="chrome-label">目录</span>
+        <span class="chrome-num">02 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px 80px; max-width: 85%;">
+            <div class="reveal">
+                <span class="stat-value" style="font-size: 48px;">01</span>
+                <p class="lead" style="font-size: var(--h3-size); font-weight: 700; margin-top: 8px;">储位之争</p>
+                <p class="body" style="font-size: var(--body-size);">武德年间的皇位继承危机</p>
+            </div>
+            <div class="reveal">
+                <span class="stat-value" style="font-size: 48px;">02</span>
+                <p class="lead" style="font-size: var(--h3-size); font-weight: 700; margin-top: 8px;">事发当日</p>
+                <p class="body" style="font-size: var(--body-size);">玄武门内的九十分钟</p>
+            </div>
+            <div class="reveal">
+                <span class="stat-value" style="font-size: 48px;">03</span>
+                <p class="lead" style="font-size: var(--h3-size); font-weight: 700; margin-top: 8px;">善后与新政</p>
+                <p class="body" style="font-size: var(--body-size);">李世民的政治智慧</p>
+            </div>
+            <div class="reveal">
+                <span class="stat-value" style="font-size: 48px;">04</span>
+                <p class="lead" style="font-size: var(--h3-size); font-weight: 700; margin-top: 8px;">历史回响</p>
+                <p class="body" style="font-size: var(--body-size);">贞观之治的起点与后世评价</p>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 3: 背景—储位之争 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="3">
+    <div class="chrome">
+        <span class="chrome-label">01 · 储位之争</span>
+        <span class="chrome-num">03 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">武德年间的皇位继承危机</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal">
+            <div class="flex-col" style="flex: 1;">
+                <p class="lead" style="margin-bottom: 12px;">
+                    唐朝建立后，李渊立长子李建成为太子，但次子李世民在统一战争中功勋卓著，逐渐形成与太子抗衡的政治势力。
+                </p>
+                <ul>
+                    <li>太原起兵（617）—— 李世民首倡，亲率大军</li>
+                    <li>平定薛举、刘武周、王世充、窦建德 —— 战功无人能及</li>
+                    <li>天策上将（621）—— 李渊特设此职位，位在诸王之上</li>
+                    <li>文学馆招揽十八学士 —— 形成自己的智囊团</li>
+                </ul>
+            </div>
+            <div style="flex: 1;">
+                <div class="stat-card reveal">
+                    <div class="stat-value">618</div>
+                    <div class="stat-label">唐朝建立，李渊称帝，立李建成为太子</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">621</div>
+                    <div class="stat-label">李世民受封天策上将，功高震主，储位矛盾浮出水面</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">624</div>
+                    <div class="stat-label">杨文干事件 —— 太子与秦王矛盾首次公开化</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 4: 关键人物 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="4">
+    <div class="chrome">
+        <span class="chrome-label">01 · 储位之争</span>
+        <span class="chrome-num">04 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">李渊三子</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal" style="margin-top: 8px;">
+            <div class="flex-col split-left" style="flex: 1; padding-right: 40px;">
+                <p class="kicker">太子 · 东宫</p>
+                <h3 class="h3" style="color: var(--cream-hint);">李建成</h3>
+                <p class="body" style="margin-top: 8px;">
+                    李渊长子，武德元年（618）立为太子。长期坐镇长安，处理政务，辅佐李渊治理国家。并非史书记载的庸碌之辈——他同样有军事才能，曾率军击退突厥。在长安经营多年，朝中文臣多归附太子。
+                </p>
+            </div>
+            <div class="flex-col split-right" style="flex: 1; padding-left: 40px;">
+                <p class="kicker" style="color: var(--fire-orange);">秦王 · 天策府</p>
+                <h3 class="h3" style="color: var(--cream);">李世民</h3>
+                <p class="body" style="margin-top: 8px;">
+                    李渊次子，唐朝的实际奠基人之一。灭六路诸侯，功盖天下。天策府人才济济：长孙无忌、房玄龄、杜如晦、尉迟敬德、秦叔宝等。功高震主又野心勃勃，是太子地位的最大威胁。
+                </p>
+            </div>
+        </div>
+        <div class="rule-full reveal" style="margin: 20px 0;"></div>
+        <div class="flex-row gap-lg reveal" style="align-items: center;">
+            <div style="flex: 1;">
+                <p class="kicker">齐王</p>
+                <h3 class="h3" style="font-size: 40px; color: var(--cream-hint);">李元吉</h3>
+                <p class="body" style="margin-top: 4px; font-size: var(--body-size);">
+                    李渊第四子，与太子结盟，多次密谋除掉李世民。在玄武门之变中被尉迟敬德射杀。
+                </p>
+            </div>
+            <div class="rule" style="width: 1px; height: 60px; margin: 0 24px; background: var(--border-dark);"></div>
+            <div style="flex: 1;">
+                <p class="kicker">高祖</p>
+                <h3 class="h3" style="font-size: 40px; color: var(--cream-hint);">李渊</h3>
+                <p class="body" style="margin-top: 4px; font-size: var(--body-size);">
+                    唐朝开国皇帝，在儿子们的权力斗争中摇摆不定。事后两个月被迫退位为太上皇。
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 5: 矛盾升级 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="5">
+    <div class="chrome">
+        <span class="chrome-label">01 · 储位之争</span>
+        <span class="chrome-num">05 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">从裂痕到决裂</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="timeline reveal">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                    <div class="timeline-time">武德七年（624）</div>
+                    <div class="timeline-text">杨文干事件：李建成指使庆州都督杨文干募兵，被李世民告发。李渊在此事上态度摇摆，最终仅作内部处理，矛盾未被根本解决。</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                    <div class="timeline-time">武德九年（626）春</div>
+                    <div class="timeline-text">太子与齐王加紧排挤秦王：李世民的心腹房玄龄、杜如晦被逐出秦王府；尉迟敬德等武将面临暗杀威胁。</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                    <div class="timeline-time">武德九年 五月</div>
+                    <div class="timeline-text">突厥入侵，李建成举荐李元吉代替李世民出征，并调走秦王府精锐部队。长孙无忌、尉迟敬德力劝李世民先发制人。</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                    <div class="timeline-time">六月初三</div>
+                    <div class="timeline-text">太史令傅奕密奏："太白见秦分，秦王当有天下。" 李渊以此质问李世民。李世民反告李建成、李元吉淫乱后宫。李渊决定次日早朝召集三子对质。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 6: 事发当日 (Orange — chapter)
+     ============================================ -->
+<section class="slide orange chapter" data-slide="6">
+    <div class="slide-content" style="justify-content: center; align-items: flex-start; padding: var(--pad-y) var(--pad-x);">
+        <div class="cat-num reveal" style="margin-bottom: 32px; color: var(--ink-black);">02 · 事发当日</div>
+        <div class="rule reveal" style="background: var(--ink-black); margin-bottom: 24px;"></div>
+        <h2 class="h1 reveal" style="font-size: 140px; max-width: 80%;">武德九年<br>六月初四</h2>
+        <p class="lead reveal" style="margin-top: 24px; max-width: 60%;color: var(--ink-black);">公元 626 年 7 月 2 日 · 长安 · 玄武门</p>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 7: 行动经过 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="7">
+    <div class="chrome">
+        <span class="chrome-label">02 · 事发当日</span>
+        <span class="chrome-num">07 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">玄武门内的九十分钟</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal" style="margin-top: 4px;">
+            <div class="flex-col" style="flex: 1.2;">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-time">凌晨</div>
+                            <div class="timeline-text">李世民率长孙无忌、尉迟敬德、房玄龄、杜如晦、秦叔宝等亲信，伏兵于玄武门内。</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-time">早上</div>
+                            <div class="timeline-text">李建成、李元吉策马入玄武门，行至临湖殿时察觉异常，调马欲退。</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-time">李世民呼喊</div>
+                            <div class="timeline-text">李世民从伏兵处冲出，李元吉张弓三射不中。李世民一箭射死李建成。</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-time">追击</div>
+                            <div class="timeline-text">尉迟敬德率七十骑兵赶到，射杀李元吉。李世民的马受惊奔入树林，被树枝绊倒，李元吉上前夺弓欲勒死李世民。尉迟敬德及时赶到，杀死李元吉。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 0.8; border-left: 1px solid var(--border-dark); padding-left: 40px;">
+                <div class="stat-card reveal" style="border-top-color: var(--fire-orange);">
+                    <div class="kicker" style="margin-bottom: 4px;">坐标</div>
+                    <p class="lead" style="color: var(--cream);">玄武门</p>
+                    <p class="body" style="margin-top: 4px;">大明宫北面正门。守卫禁军将领常何原为太子亲信，已被李世民策反。这是整个计划的关键。</p>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="kicker" style="margin-bottom: 4px;">兵力对比</div>
+                    <p class="lead" style="color: var(--cream);">伏兵约八百人</p>
+                    <p class="body" style="margin-top: 4px;">对太子、齐王随从数十人。但东宫和齐府两千卫兵很快赶来围攻。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 8: 结局 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="8">
+    <div class="chrome">
+        <span class="chrome-label">02 · 事发当日</span>
+        <span class="chrome-num">08 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">一朝定乾坤</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal">
+            <div class="flex-col" style="flex: 1;">
+                <p class="lead" style="margin-bottom: 12px;">
+                    建成、元吉被杀后，东宫和齐府卫兵围攻玄武门。尉迟敬德持二人首级示众，围兵溃散。
+                </p>
+                <p class="lead" style="margin-bottom: 20px;">
+                    李世民派尉迟敬德"保护"李渊——实际上是以武力胁迫。李渊被迫下诏：建成、元吉谋反，秦王代为处置。随后立李世民为太子，军国大事悉归太子处理。
+                </p>
+                <ul>
+                    <li>建成、元吉诸子全部被处死</li>
+                    <li>李世民不追究太子旧部——魏徵、王珪等后来成为贞观名臣</li>
+                    <li>两个月后，李渊退位为太上皇</li>
+                    <li>李世民登基，改元贞观</li>
+                </ul>
+            </div>
+            <div style="flex: 0.9;">
+                <div class="stat-card reveal">
+                    <div class="stat-value">2 个月</div>
+                    <div class="stat-label">从政变到李渊正式内禅</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">23 年</div>
+                    <div class="stat-label">李世民在位时间（626–649）</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">10 子</div>
+                    <div class="stat-label">建成、元吉的子女全部被诛</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 9: 善后与新政 (Orange — chapter)
+     ============================================ -->
+<section class="slide orange chapter" data-slide="9">
+    <div class="slide-content" style="justify-content: center; align-items: flex-start; padding: var(--pad-y) var(--pad-x);">
+        <div class="cat-num reveal" style="margin-bottom: 32px; color: var(--ink-black);">03 · 善后与新政</div>
+        <div class="rule reveal" style="background: var(--ink-black); margin-bottom: 24px;"></div>
+        <h2 class="h1 reveal" style="font-size: 120px; max-width: 75%;">李世民的政治智慧</h2>
+        <p class="lead reveal" style="margin-top: 24px; max-width: 65%;color: var(--ink-black);">政变是手段，治国才是目的</p>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 10: 贞观之治 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="10">
+    <div class="chrome">
+        <span class="chrome-label">03 · 善后与新政</span>
+        <span class="chrome-num">10 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">贞观之治的起点</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal">
+            <div class="flex-col" style="flex: 1;">
+                <p class="lead" style="margin-bottom: 16px;">
+                    李世民即位后，展现出卓越的政治才能。他并未因政变得位不正而自缚手脚，反而以开放包容的治理姿态开创了中国历史上最著名的治世。
+                </p>
+                <ul>
+                    <li>用人唯贤：魏徵、王珪、马周等原太子旧部都获重用</li>
+                    <li>虚心纳谏：魏徵以直言敢谏闻名，前后谏言两百余事</li>
+                    <li>修史明志：亲自主持编修《隋书》《晋书》等，以史为鉴</li>
+                    <li>抚民以静：轻徭薄赋，与民休息，恢复隋末战乱破坏的经济</li>
+                    <li>开疆拓土：灭东突厥、吐谷浑、高昌，西域称天可汗</li>
+                </ul>
+            </div>
+            <div style="flex: 0.8;">
+                <div class="stat-card reveal">
+                    <div class="stat-value">"以铜为镜"</div>
+                    <div class="stat-label">魏徵去世后，李世民的名言：以铜为镜，可以正衣冠；以史为镜，可以知兴替；以人为镜，可以明得失</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">"天可汗"</div>
+                    <div class="stat-label">贞观四年（630），西北诸族尊李世民为天可汗，唐代国际地位达到顶峰</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 11: 后世评价 (Dark)
+     ============================================ -->
+<section class="slide dark" data-slide="11">
+    <div class="chrome">
+        <span class="chrome-label">04 · 历史回响</span>
+        <span class="chrome-num">11 / 12</span>
+    </div>
+    <div class="slide-content" style="justify-content: center;">
+        <h2 class="h2 reveal" style="font-size: 72px;">功臣还是篡位者</h2>
+        <div class="rule reveal" style="margin: 16px 0 24px 0;"></div>
+        <div class="flex-row gap-lg reveal">
+            <div class="flex-col split-left" style="flex: 1; padding-right: 40px;">
+                <p class="kicker">正面评价</p>
+                <p class="body" style="margin-top: 8px;">
+                    李世民在《资治通鉴》中被司马光评价为"功业隆盛"。后世普遍认为，如果他没有果断行动，可能会被太子除掉，唐朝可能陷入长期内乱。贞观之治的成就在某种程度上"洗白"了政变的血腥。柳宗元、苏轼等历代文人对李世民多持肯定态度。
+                </p>
+            </div>
+            <div class="flex-col split-right" style="flex: 1; padding-left: 40px;">
+                <p class="kicker">负面评价</p>
+                <p class="body" style="margin-top: 8px;">
+                    杀兄屠弟、逼父退位，在儒家伦理中是严重失德。李世民本人对此终生不安，晚年多次梦见建成、元吉索命。他屡次修改史书（"实录"），试图美化自己的形象。王夫之在《读通鉴论》中严厉批评李世民"大义已亏"。玄武门之变开启了唐代的"宫廷政变"传统——此后唐王朝多次发生类似的政变。
+                </p>
+            </div>
+        </div>
+        <div class="rule-full reveal" style="margin: 20px 0;"></div>
+        <p class="caption reveal" style="text-align: center; max-width: 80%; margin: 0 auto;">
+            玄武门之变是中国历史上最著名的宫廷政变之一。它在道德上的争议从未平息，但它在政治上的结果——贞观之治——同样不可否认。理解这段历史的关键，在于同时看到这两面。
+        </p>
+    </div>
+    <div class="chrome-foot">
+        <span class="chrome-label"></span>
+        <span class="chrome-num">玄武门之变 · 自学资料</span>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 12: 结束页 (Orange)
+     ============================================ -->
+<section class="slide orange end" data-slide="12">
+    <div class="slide-content" style="justify-content: center; align-items: center; text-align: center; padding: var(--pad-y) var(--pad-x);">
+        <div class="cat-num reveal" style="margin-bottom: 40px; color: var(--ink-black);">04 · 历史回响</div>
+        <div class="rule reveal" style="background: var(--ink-black); margin: 0 auto 32px auto;"></div>
+        <h2 class="h1 reveal" style="font-size: 80px;max-width: 80%;margin:0 auto;">历史没有如果</h2>
+        <p class="lead reveal" style="margin-top: 32px; max-width: 60%; margin-left: auto; margin-right: auto; color: var(--ink-black);">但贞观确实因此而来</p>
+        <div style="margin-top: 64px;">
+            <p class="body reveal" style="color: var(--ink-black); font-size: var(--caption-size);">资料来源：《旧唐书》《新唐书》《资治通鉴》</p>
+            <p class="body reveal" style="color: var(--ink-on-orange-hint); font-size: var(--caption-size); margin-top: 4px;">玄武门之变 · 自学资料 · 2026</p>
+        </div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<!-- Navigation controls outside the stage -->
+<div class="deck-controls" style="display: flex; gap: 12px; align-items: center;">
+    <div style="display: flex; gap: 6px;" id="navDots"></div>
+    <span style="font-family: 'Noto Sans SC', monospace; font-size: 13px; color: #666; margin-left: 12px;" id="slideCounter">01 / 12</span>
+</div>
+
+<!-- Edit hotzone -->
+<div class="edit-hotzone"></div>
+<button class="edit-toggle" id="editToggle" title="编辑模式 (E)">✏️ 编辑</button>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.total = this.slides.length;
+        this.current = 0;
+        this.stage = document.getElementById('deckStage');
+        this.setupStageScale();
+        this.setupNavigation();
+        this.setupTouch();
+        this.setupWheel();
+        this.buildNavDots();
+        this.showSlide(0);
+
+        // Inline editing
+        this.setupEditMode();
+    }
+
+    setupStageScale() {
+        const scale = () => {
+            const ww = window.innerWidth;
+            const wh = window.innerHeight;
+            const factor = Math.min(ww / 1920, wh / 1080);
+            const x = (ww - 1920 * factor) / 2;
+            const y = (wh - 1080 * factor) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+
+    setupNavigation() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.getAttribute('contenteditable')) return;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                this.next();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                this.prev();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                this.showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                this.showSlide(this.total - 1);
+            }
+        });
+    }
+
+    setupTouch() {
+        let startX = 0, startY = 0;
+        this.stage.addEventListener('touchstart', (e) => {
+            startX = e.changedTouches[0].screenX;
+            startY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        this.stage.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].screenX - startX;
+            const dy = e.changedTouches[0].screenY - startY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                dx < 0 ? this.next() : this.prev();
+            }
+        }, { passive: true });
+    }
+
+    setupWheel() {
+        let ticking = false;
+        this.stage.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (ticking) return;
+            ticking = true;
+            setTimeout(() => ticking = false, 600);
+            e.deltaY > 0 ? this.next() : this.prev();
+        }, { passive: false });
+    }
+
+    buildNavDots() {
+        const container = document.getElementById('navDots');
+        for (let i = 0; i < this.total; i++) {
+            const dot = document.createElement('div');
+            dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:#555;cursor:pointer;transition:background 0.3s;';
+            dot.addEventListener('click', () => this.showSlide(i));
+            container.appendChild(dot);
+            this.dots = container.querySelectorAll('div');
+        }
+    }
+
+    updateCounter() {
+        const el = document.getElementById('slideCounter');
+        el.textContent = `${String(this.current + 1).padStart(2, '0')} / ${String(this.total).padStart(2, '0')}`;
+    }
+
+    next() { this.showSlide(this.current + 1); }
+    prev() { this.showSlide(this.current - 1); }
+
+    showSlide(index) {
+        this.current = Math.max(0, Math.min(index, this.total - 1));
+        this.slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === this.current);
+            slide.classList.toggle('visible', i === this.current);
+        });
+        this.updateCounter();
+        if (this.dots) {
+            this.dots.forEach((d, i) => {
+                d.style.background = i === this.current ? '#E85D26' : '#555';
+            });
+        }
+    }
+
+    /* ===========================================
+       INLINE EDITING
+       =========================================== */
+    setupEditMode() {
+        this.editMode = false;
+        const toggle = document.getElementById('editToggle');
+        const hotzone = document.querySelector('.edit-hotzone');
+        let hideTimeout = null;
+
+        const show = () => { clearTimeout(hideTimeout); toggle.classList.add('show'); };
+        const hide = () => {
+            hideTimeout = setTimeout(() => {
+                if (!this.editMode) toggle.classList.remove('show');
+            }, 400);
+        };
+
+        hotzone.addEventListener('mouseenter', show);
+        hotzone.addEventListener('mouseleave', hide);
+        toggle.addEventListener('mouseenter', show);
+        toggle.addEventListener('mouseleave', hide);
+        hotzone.addEventListener('click', () => this.toggleEditMode());
+        toggle.addEventListener('click', () => this.toggleEditMode());
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+                this.toggleEditMode();
+            }
+        });
+    }
+
+    toggleEditMode() {
+        this.editMode = !this.editMode;
+        const toggle = document.getElementById('editToggle');
+        toggle.classList.toggle('active', this.editMode);
+        toggle.textContent = this.editMode ? '✅ 完成编辑' : '✏️ 编辑';
+        document.querySelectorAll('.slide.active [contenteditable]').forEach(el => {
+            if (!this.editMode) el.blur();
+        });
+    }
+}
+
+new SlidePresentation();
+</script>
+</body>
+</html>
